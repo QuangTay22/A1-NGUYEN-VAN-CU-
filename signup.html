@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ngôi nhà của những ước mơ - Sign up</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      width: 350px;
+      background: white;
+      border: 1px solid #dbdbdb;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      color: #ff4b7d;
+      margin-bottom: 10px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: #fafafa;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 20px;
+      border: none;
+      background: #4a90ff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2f76ff;
+    }
+
+    p {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    span {
+      color: #4a90ff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h1>Ngôi nhà của những ước mơ</h1>
+  <p>Tạo tài khoản mới</p>
+
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Mật khẩu (>=6 ký tự)" />
+
+  <button onclick="signup()">Create account</button>
+
+  <p>Đã có tài khoản? <span onclick="goLogin()">Đăng nhập</span></p>
+</div>
+
+<script>
+const SUPABASE_URL = "https://vzznktcbhkmouknjtyjg.supabase.co";
+const SUPABASE_KEY = "sb_publishable_FAkJ_2gVnmA1X6DM56zkUA_Jqmtx61K";
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function signup() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    alert("Nhập đầy đủ email và mật khẩu!");
+    return;
+  }
+
+  const { error } = await supabase.auth.signUp({
+    email: email,
+    password: password
+  });
+
+  if (error) {
+    alert("Lỗi: " + error.message);
+  } else {
+    alert("Tạo tài khoản thành công! Đăng nhập lại.");
+    window.location.href = "index.html"; // quay về login
+  }
+}
+
+function goLogin() {
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
