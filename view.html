@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ngôi nhà của những ước mơ</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f0f2f5;
+    }
+
+    header {
+      background: #1877f2;
+      color: white;
+      padding: 12px 20px;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .feed {
+      max-width: 600px;
+      margin: 20px auto;
+    }
+
+    .post {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+    }
+
+    .post h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .time {
+      font-size: 12px;
+      color: gray;
+      margin-bottom: 8px;
+    }
+
+    .content {
+      font-size: 15px;
+      margin-top: 5px;
+      white-space: pre-line;
+    }
+
+    .logout {
+      background: #e74c3c;
+      border: none;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .logout:hover {
+      background: #c0392b;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  Ngôi nhà của những ước mơ
+  <button class="logout" onclick="logout()">Đăng xuất</button>
+</header>
+
+<div class="feed" id="feed"></div>
+
+<script>
+const SUPABASE_URL = "https://vzznktcbhkmouknjtyjg.supabase.co";
+const SUPABASE_KEY = "sb_publishable_FAkJ_2gVnmA1X6DM56zkUA_Jqmtx61K";
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// kiểm tra đăng nhập
+async function checkLogin() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    window.location.href = "index.html";
+  }
+}
+checkLogin();
+
+// load bài viết
+async function loadPosts() {
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    alert("Lỗi load bài: " + error.message);
+    return;
+  }
+
+  const feed = document.getElementById("feed");
+  feed.innerHTML = "";
+
+  if (data.length === 0) {
+    feed.innerHTML = "<p style='text-align:center;'>Chưa có bài viết nào.</p>";
+    return;
+  }
+
+  data.forEach(post => {
+    const div = document.createElement("div");
+    div.className = "post";
+    div.innerHTML = `
+      <h3>${post.title}</h3>
+      <div class="time">${new Date(post.created_at).toLocaleString()}</div>
+      <div class="content">${post.content}</div>
+    `;
+    feed.appendChild(div);
+  });
+}
+
+loadPosts();
+
+async function logout() {
+  await supabase.auth.signOut();
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
