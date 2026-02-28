@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ngôi nhà của những ước mơ - Login</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      width: 900px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .left {
+      flex: 1;
+      padding: 40px;
+    }
+
+    .left h1 {
+      font-size: 36px;
+      color: #ff4b7d;
+    }
+
+    .right {
+      flex: 1;
+      padding: 40px;
+      border-left: 1px solid #ddd;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 20px;
+      background: #4a90ff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .create-btn {
+      background: white;
+      color: #4a90ff;
+      border: 1px solid #4a90ff;
+    }
+
+    p {
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="left">
+    <h1>Ngôi nhà của những ước mơ</h1>
+    <p>Nơi chia sẻ hình ảnh và câu chuyện của lớp chúng ta 💖</p>
+  </div>
+
+  <div class="right">
+    <h2>Đăng nhập</h2>
+
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+
+    <button onclick="login()">Log in</button>
+
+    <p>or</p>
+
+    <!-- FIXED BUTTON -->
+    <button class="create-btn" onclick="goToSignup()">Create new account</button>
+  </div>
+</div>
+
+<script>
+  const supabaseUrl = "https://YOUR_PROJECT_ID.supabase.co";
+  const supabaseKey = "YOUR_ANON_PUBLIC_KEY";
+  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+  function goToSignup() {
+    window.location.href = "signup.html";
+  }
+
+  async function login() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      alert("Login failed: " + error.message);
+      return;
+    }
+
+    // check admin email
+    if (email === "admindiendannvca1@gmail.com") {
+      window.location.href = "index_admin.html";
+    } else {
+      window.location.href = "view.html";
+    }
+  }
+</script>
+
+</body>
+</html>
